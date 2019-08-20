@@ -1,0 +1,45 @@
+import React, { useState } from 'react';
+import { axiosWithAuth } from '../axiosAuth';
+import axios from 'axios';
+
+const LoginForm = props =>{
+  const [credentials, setCredentials] = useState({});
+
+
+  const login = e => {
+    e.preventDefault();
+    axios.post('http://localhost:5000/api/login', credentials)
+      .then(res => {
+        console.log('login', res)
+        localStorage.setItem('token', res.data.payload);
+        props.history.push('/');
+      })
+  }
+
+  const handleChange = e => {
+      setCredentials({
+        ...credentials,
+        [e.target.name]: e.target.value,
+      })
+  }
+
+  return(
+    <form onSubmit={login}>
+      <input
+        type="text"
+        name="username"
+        value={credentials.username}
+        onChange={handleChange}
+      />
+      <input
+        type="password"
+        name="password"
+        value={credentials.password}
+        onChange={handleChange}
+      />
+      <button>Login</button>
+    </form>
+  );
+};
+
+export default LoginForm;
